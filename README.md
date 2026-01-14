@@ -10,6 +10,7 @@ This paper introduces **LpBound**, a pessimistic cardinality estimator for multi
 
 Check out the [website](https://www.ifi.uzh.ch/en/dast/research/LpBound.html) for more details.  If you have any questions about the code, please feel free to reach out to Christoph Mayer and Haozhe Zhang.
 
+
 ## Reproducing Experiments
 
 This repository contains the information needed to reproduce the experimental results in the paper.
@@ -124,6 +125,16 @@ Our code requires the following software to be installed:
 - `cmake` (version 3.25.1)
 - `PostgreSQL` (version 13.14)
 - `duckdb` (version 0.10.1)
+
+### Hardware & Software Environment
+
+|            | Paper                  |
+|------------|------------------------|
+| CPU        | Intel Xeon Silver 4214 |
+| Cores      | 48                     |
+| GHz        | 2.2 GHz                |
+| RAM        | 193 GB                 |
+| Storage    | SSD                    |
 
 ### Setup Datasets
 
@@ -275,6 +286,14 @@ bash psql_create_subgraph_matching_benchmark.sh # for subgraph matching benchmar
 ## Running Experiments
 
 The scripts for the experiments are in the `benchmarks/experiments` directory. The experiment results that we present in the paper are stored in the `results` directory. Re-running the experiments (with different parameters) will overwrite the results.  The jupyter notebooks used to generate the plots are stored in the `notebooks` directory.
+
+To avoid mixing newly generated outputs with the original paper results, we provide a cleanup script:
+
+```bash
+bash clean_results.sh
+```
+
+This script backs up `results/` into `results_backup/` and deletes only generated result files (e.g., `lpbound_*`, `postgres_*`, `duckdb_*`). It does not remove static ground-truth files such as `truecardinality_*.csv`.
 
 We explain how to reproduce the experiments in **Section 6 Experimental Evaluation** of the paper.
 
