@@ -76,6 +76,7 @@ method_names = {
     "panda": "PANDA",
     "lpbound": "LPBound",
     "safebound": "SafeBound",
+    "dbx": "DBX",
     "factorjoin": "FactorJoin",
     "bayescard": "BayesCard",
     "deepdb": "DeepDB",
@@ -92,7 +93,7 @@ method_names = {
 # Group methods by category
 categories = {
     "Pessimistic": ["lpbound", "safebound", "panda"],
-    "Traditional": ["duckdb", "postgres", "Postgres-Full", "Postgres-Accurate", "Postgres-Full-Accurate"],
+    "Traditional": ["dbx", "duckdb", "postgres", "Postgres-Full", "Postgres-Accurate", "Postgres-Full-Accurate"],
     "PGM-based": ["bayescard", "deepdb", "factorjoin"],
     "ML-based": ["neurocard", "flat"],
 }
