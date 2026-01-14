@@ -287,6 +287,12 @@ bash psql_create_subgraph_matching_benchmark.sh # for subgraph matching benchmar
 
 The scripts for the experiments are in the `benchmarks/experiments` directory. The experiment results that we present in the paper are stored in the `results` directory. Re-running the experiments (with different parameters) will overwrite the results.  The jupyter notebooks used to generate the plots are stored in the `notebooks` directory.
 
+For a simple global install of notebook dependencies, run:
+
+```bash
+bash notebooks/install_notebook_deps.sh
+```
+
 To avoid mixing newly generated outputs with the original paper results, we provide a cleanup script:
 
 ```bash
