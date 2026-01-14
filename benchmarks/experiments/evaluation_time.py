@@ -72,7 +72,7 @@ def compute_subquery_cardinalities(config: LpBoundConfig):
 
 def get_evaluation_time_using_psql(
     benchmark: str,
-    method: str,  # lpbound, postgres, truecardinality
+    method: str,  # lpbound, safebound, postgres, truecardinality, factorjoin, bayescard
     num_runs: int = 5,
     dbStatisticsTarget: int = 100,
 ):
@@ -170,11 +170,13 @@ def save_runtime(benchmark, method, runtime):
 
 
 def run_evaluation_time_experiments():
-    methods = ["lpbound", "postgres", "truecardinality"]
+    methods = ["lpbound", "safebound", "postgres", "truecardinality", "factorjoin", "bayescard"]
     benchmarks = ["joblight", "jobrange", "stats"]
 
     for benchmark in benchmarks:
         for method in methods:
+            if method == "bayescard" and benchmark == "jobrange":  # we do not have bayescard for jobrange
+                continue
             print(f"Running runtime experiments for {benchmark} and {method}...")
             get_evaluation_time_using_psql(benchmark, method, num_runs=5)
 

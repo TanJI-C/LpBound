@@ -11,6 +11,10 @@ This paper introduces **LpBound**, a pessimistic cardinality estimator for multi
 Check out the [website](https://www.ifi.uzh.ch/en/dast/research/LpBound.html) for more details.  If you have any questions about the code, please feel free to reach out to Christoph Mayer and Haozhe Zhang.
 
 
+## Repositories and Reproducibility Scope
+
+The public repository includes LpBound and open-source competitor systems used in our evaluation. The full paper reproduction (including a commercial system) lives in a separate private repository. We cannot make that repository public due to third-party/commercial components, but we can share the code upon request for researchers who need full reproduction.
+
 ## Reproducing Experiments
 
 This repository contains the information needed to reproduce the experimental results in the paper.
