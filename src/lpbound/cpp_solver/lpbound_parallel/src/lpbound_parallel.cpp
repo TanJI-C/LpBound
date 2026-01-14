@@ -284,15 +284,21 @@ int main(int argc, char* argv[]) {
         int n_queries = benchmark_number_of_queries[benchmark];
 
         std::string outputfile;
+        std::string outputfile_detailed;
         if (exec_mode == PARALLEL) {
             outputfile = output_dir + "/runtimes_" + benchmark + "_lpbound_optimized_full_lattice_parallel.txt";
         } else if (exec_mode == FULL_QUERIES) {
             outputfile = output_dir + "/runtimes_" + benchmark + "_lpbound_optimized_full_queries.txt";
         } else {
             outputfile = output_dir + "/runtimes_" + benchmark + "_lpbound_optimized_full_lattice_sequential.txt";
+            outputfile_detailed = output_dir + "/runtimes_" + benchmark + "_lpbound_optimized_full_lattice_sequential_detailed.txt";
         }
 
         std::ofstream out(outputfile);
+        std::ofstream out_detailed;
+        if (exec_mode == SEQUENTIAL) {
+            out_detailed.open(outputfile_detailed);
+        }
 
         if (exec_mode == PARALLEL) {
             out << "query_id,run_id,total_time" << std::endl;
@@ -300,6 +306,7 @@ int main(int argc, char* argv[]) {
             out << "query_id,run_id,build_time,solve_time,estimate" << std::endl;
         } else {
             out << "query_id,run_id,lattice,runtime,estimate" << std::endl;
+            out_detailed << "query_id,run_id,lattice,build_time,solve_time,estimate" << std::endl;
         }
 
         std::cout << "Starting to construct the lp models ..." << std::endl;
@@ -461,7 +468,8 @@ int main(int argc, char* argv[]) {
                         double solve_time = results_vector[2];
                         int total_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_total - begin_total).count();
                         if (j != 0) {
-                            out << i << "," << j << "," << build_time << "," << solve_time << "," << results << std::endl;
+                            out << i << "," << j << "," << l << "," << total_time << "," << results << std::endl;
+                            out_detailed << i << "," << j << "," << l << "," << build_time << "," << solve_time << "," << results << std::endl;
                         }
                     }
                 }

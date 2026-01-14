@@ -1,6 +1,6 @@
+from __future__ import annotations
 from pathlib import Path
 import sys
-
 
 class LpBoundPaths:
 
@@ -36,6 +36,12 @@ class LpBoundPaths:
         "jobrange": "jobrange",
         "stats": "stats",
         "subgraph_matching": "subgraph_matching",
+    }
+
+    GROUPBY_DB_NAME_DICT: dict[str, str] = {
+        "joblight": "imdb",
+        "jobrange": "imdb",
+        "stats": "stats",
     }
 
     @classmethod

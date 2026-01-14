@@ -83,16 +83,24 @@ def run_LpFlow():
 def main():
     
     # creating input files:
-    print("Creating input files...")
-    #cf.main()
+    print("Creating input files.")
+    print("This may take a while...")
+    cf.main()
     
     # run LpFlow
-    #run_LpFlow()    
-    
+    print("Started running LP Flow")
+    run_LpFlow()
+    print("Finished running LP Flow")
+
+    # Create output directory if it doesn't exist
+    output_dir = f"{LpBoundPaths.PROJ_ROOT_DIR}/src/lpbound/cpp_solver/lpbound_parallel/output"
+    os.makedirs(output_dir, exist_ok=True)
+
     # run LpBerge
     lp_berge_script = "./run_lpberge.sh"
     
     print("\nRunning LpBerge...")
+    print("We only produced full query files for ")
     print(f"Running script: {lp_berge_script}")
     try:
         result_berge = subprocess.run(lp_berge_script, shell=True, capture_output=True, text=True, check=True, cwd="src/lpbound/cpp_solver/lpbound_parallel/")

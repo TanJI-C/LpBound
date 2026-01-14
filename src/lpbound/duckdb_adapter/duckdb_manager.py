@@ -7,11 +7,13 @@ from lpbound.config.benchmark_schema import BenchmarkSchema
 from lpbound.config.paths import LpBoundPaths
 
 
+
+
 class DatabaseManager:
-    def __init__(self, benchmark_schema: BenchmarkSchema):
+    def __init__(self, benchmark_schema: BenchmarkSchema, groupby: bool = False):
         """benchmark: str, e.g., "jobjoin", "joblight", "jobrange", "stats" subgraph_matching"""
         self.benchmark: str = benchmark_schema["name"]  # e.g., "jobjoin"
-        self.db_name: str = LpBoundPaths.WORKLOAD_TO_DB_MAP[self.benchmark]
+        self.db_name: str = LpBoundPaths.WORKLOAD_TO_DB_MAP[self.benchmark] if not groupby else LpBoundPaths.GROUPBY_DB_NAME_DICT[self.benchmark]
         self.duckdb_file: str = os.path.join(LpBoundPaths.DATA_DIR, "duckdb", f"{self.db_name}_duckdb.db")
         self.benchmark_schema: BenchmarkSchema = benchmark_schema
 

@@ -72,9 +72,9 @@ def aggregate_results():
 
 if __name__ == "__main__":
     
-    #run_lpbound_cpp(
-    #    run_parallel=False
-    #)
+    run_lpbound_cpp(
+        run_parallel=False
+    )
     
     run_lpbound_cpp(
         run_parallel=True

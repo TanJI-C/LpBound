@@ -32,8 +32,8 @@ extensions = [
         libraries=['highs'],
         language='c++',
         extra_compile_args=['-std=c++11', '-fopenmp'],
-        extra_link_args=['-fopenmp', f'-Wl,-rpath,{highs_lib_dir}'],
-        runtime_library_dirs=[highs_lib_dir],
+        extra_link_args=['-fopenmp', '-Wl,--disable-new-dtags', f'-Wl,-rpath,{highs_lib_dir}'],
+        # runtime_library_dirs removed - using RPATH via extra_link_args instead
     )
 ]
 

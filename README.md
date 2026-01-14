@@ -78,6 +78,7 @@ The project is organized into several directories. Here is a high-level overview
 .
 ├── benchmarks/      # All assets to run experiments from the paper.
 │  ├── experiments/  # Python scripts for each experiment (accuracy, time, etc.).
+│  ├── approaches/   # Baseline database integrations (e.g., postgres, duckdb).
 │  ├── schemas/      # JSON schema definitions for the databases.
 │  └── workloads/    # SQL queries and metadata for each benchmark workload.
 │
@@ -204,7 +205,7 @@ Now, set up the parallel implementation that we use for runtime experiments. Exe
 ```bash
 # unzip and preprocess the input files:
 unzip raw_input.zip -d raw_input
-python create_input_files_subqueries.py
+poetry run python create_input_files_subqueries.py
 bash compile.sh
 ```
 
@@ -266,6 +267,7 @@ The scripts to create the databases from the datasets are in the datasets direct
 cd data
 bash psql_create_job_benchmark.sh  # for job* benchmarks
 bash psql_create_stats_benchmark.sh  # for stats benchmark
+bash psql_create_subgraph_matching_benchmark.sh # for subgraph matching benchmark
 ```
 
 
@@ -323,6 +325,10 @@ Figure 6 in the paper is generated from the results of this experiment using the
 
 ### Section 6.3: Estimation Times (Table 2)
 
+Important: Before executing these experiments, ensure that you prepared the query files by running:
+
+`poetry run python create_input_files_subqueries.py` in the directory `LpBound/src/lpbound/cpp_solver/lpbound_parallel`. Subsequent experiments might overwrite the inputs to the C++ program. Thus, refreshing the file is important.
+
 We evaluate the time taken by LpBound to estimate the cardinalities of the queries.  To run the estimation time experiments, use the following command:
 
 ```bash
@@ -346,7 +352,7 @@ poetry run python benchmarks/experiments/space_usage.py
 
 The results are stored in `results/space_usage`.
 
-### Section 6.5: Time to Compute the Statistics (Table 4)
+### Section 6.5: Time to Compute the Statistics (Table 3)
 
 We evaluate the time taken to compute the statistics for the queries in the benchmarks.  To run the time to compute the statistics experiments, use the following command:
 
@@ -360,7 +366,7 @@ The results are stored in `results/statistics_computation_time`.
 
 This experiment evaluates the end-to-end evaluation time of the queries when the estimated cardinalities of the subqueries are used.  
 
-To run the experiments, you need to create the databases for `PostgreSQL` as described in the [Setup](#setup) section. You might need to change the `benchmarks/experiments/utils/postgres_config.py` and `benchmarks/experiments/utils/postgres_utils.py` to match your `PostgreSQL` server, e.g., the port number.
+To run the experiments, you need to create the databases for `PostgreSQL` as described in the [Setup](#setup) section. You might need to change the `benchmarks/approaches/postgres/config.py` to match your `PostgreSQL` server, e.g., the port number.
 
 Once you have created the databases, you can run the experiments using the following command:
 
@@ -391,7 +397,7 @@ For Figure 10, you need to run the following command:
 ```bash
 poetry run python benchmarks/experiments/mcvs_effectiveness.py
 ```
-The results will be stored in `results/mcvs_effectiveness`, and you can generate the figure using the notebook `mcvs_effectiveness.ipynb` in the `notebooks` directory.
+The results will be stored in `results/mcv_effectiveness`, and you can generate the figure using the notebook `mcv_effectiveness.ipynb` in the `notebooks` directory.
 
 #### Optimizations for LpBound’s LPs: Figure 11 - LpBase vs. LpFlow vs. LpBerge
 
@@ -402,7 +408,7 @@ To reproduce the experiments whose results are presented in Fig. 11, follow thes
 chmod +x src/lpbound/cpp_solver/lpbound_parallel/run_lpberge.sh src/lpbound/cpp_solver/lpbound_parallel/run_lpbase.sh 
 
 # run experiments:
-poetry run python python benchmarks/experiments/lpbase_lpflow_lpberge_comparison.py
+poetry run python benchmarks/experiments/lpbase_lpflow_lpberge_comparison.py
 ```
 
 The results will be stored in `results/estimation_time`, and you can generate the figure using the notebook `runtime_by_method.ipynb` in the `notebooks` directory.
