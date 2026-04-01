@@ -2,7 +2,7 @@
 .DS_Store
 
 # Data
-data/datasets/imdb
+data/datasets/imdb*
 data/datasets/imdb_processed
 data/datasets/stats/posthistory.csv
 data/datasets/stats/postlinks.csv

@@ -1,0 +1,440 @@
+{
+  "name": "imdb_60_train",
+  "relations": {
+    "AKA_NAME": {
+      "ID": "int",
+      "PERSON_ID": "int",
+      "NAME": "str",
+      "IMDB_INDEX": "str",
+      "NAME_PCODE_CF": "str",
+      "NAME_PCODE_NF": "str",
+      "SURNAME_PCODE": "str",
+      "MD5SUM": "str"
+    },
+    "AKA_TITLE": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "TITLE": "str",
+      "IMDB_INDEX": "str",
+      "KIND_ID": "int",
+      "PRODUCTION_YEAR": "int",
+      "PHONETIC_CODE": "str",
+      "EPISODE_OF_ID": "int",
+      "SEASON_NR": "int",
+      "EPISODE_NR": "int",
+      "NOTE": "str",
+      "MD5SUM": "str"
+    },
+    "CAST_INFO": {
+      "ID": "int",
+      "PERSON_ID": "int",
+      "MOVIE_ID": "int",
+      "PERSON_ROLE_ID": "int",
+      "NOTE": "str",
+      "NR_ORDER": "int",
+      "ROLE_ID": "int"
+    },
+    "CHAR_NAME": {
+      "ID": "int",
+      "NAME": "str",
+      "IMDB_INDEX": "str",
+      "IMDB_ID": "int",
+      "NAME_PCODE_NF": "str",
+      "SURNAME_PCODE": "str",
+      "MD5SUM": "str"
+    },
+    "COMP_CAST_TYPE": {
+      "ID": "int",
+      "KIND": "str"
+    },
+    "COMPANY_NAME": {
+      "ID": "int",
+      "NAME": "str",
+      "COUNTRY_CODE": "str",
+      "IMDB_ID": "int",
+      "NAME_PCODE_NF": "str",
+      "NAME_PCODE_SF": "str",
+      "MD5SUM": "str"
+    },
+    "COMPANY_TYPE": {
+      "ID": "int",
+      "KIND": "str"
+    },
+    "COMPLETE_CAST": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "SUBJECT_ID": "int",
+      "STATUS_ID": "int"
+    },
+    "INFO_TYPE": {
+      "ID": "int",
+      "INFO": "str"
+    },
+    "KEYWORD": {
+      "ID": "int",
+      "KEYWORD": "str",
+      "PHONETIC_CODE": "str"
+    },
+    "KIND_TYPE": {
+      "ID": "int",
+      "KIND": "str"
+    },
+    "LINK_TYPE": {
+      "ID": "int",
+      "LINK": "str"
+    },
+    "MOVIE_COMPANIES": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "COMPANY_ID": "int",
+      "COMPANY_TYPE_ID": "int",
+      "NOTE": "str"
+    },
+    "MOVIE_INFO": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "INFO_TYPE_ID": "int",
+      "INFO": "str",
+      "NOTE": "str"
+    },
+    "MOVIE_INFO_IDX": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "INFO_TYPE_ID": "int",
+      "INFO": "str",
+      "NOTE": "str"
+    },
+    "MOVIE_KEYWORD": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "KEYWORD_ID": "int"
+    },
+    "MOVIE_LINK": {
+      "ID": "int",
+      "MOVIE_ID": "int",
+      "LINKED_MOVIE_ID": "int",
+      "LINK_TYPE_ID": "int"
+    },
+    "NAME": {
+      "ID": "int",
+      "NAME": "str",
+      "IMDB_INDEX": "str",
+      "IMDB_ID": "int",
+      "GENDER": "str",
+      "NAME_PCODE_CF": "str",
+      "NAME_PCODE_NF": "str",
+      "SURNAME_PCODE": "str",
+      "MD5SUM": "str"
+    },
+    "PERSON_INFO": {
+      "ID": "int",
+      "PERSON_ID": "int",
+      "INFO_TYPE_ID": "int",
+      "INFO": "str",
+      "NOTE": "str"
+    },
+    "ROLE_TYPE": {
+      "ID": "int",
+      "ROLE": "str"
+    },
+    "TITLE": {
+      "ID": "int",
+      "TITLE": "str",
+      "IMDB_INDEX": "str",
+      "KIND_ID": "int",
+      "PRODUCTION_YEAR": "int",
+      "IMDB_ID": "int",
+      "PHONETIC_CODE": "str",
+      "EPISODE_OF_ID": "int",
+      "SEASON_NR": "int",
+      "EPISODE_NR": "int",
+      "SERIES_YEARS": "str",
+      "MD5SUM": "str"
+    }
+  },
+  "join_variables": {
+    "AKA_NAME": [
+      "ID",
+      "PERSON_ID"
+    ],
+    "AKA_TITLE": [
+      "ID",
+      "MOVIE_ID",
+      "KIND_ID"
+    ],
+    "CAST_INFO": [
+      "ID",
+      "PERSON_ID",
+      "MOVIE_ID",
+      "PERSON_ROLE_ID",
+      "ROLE_ID"
+    ],
+    "CHAR_NAME": [
+      "ID"
+    ],
+    "COMP_CAST_TYPE": [
+      "ID"
+    ],
+    "COMPANY_NAME": [
+      "ID"
+    ],
+    "COMPANY_TYPE": [
+      "ID"
+    ],
+    "COMPLETE_CAST": [
+      "ID",
+      "MOVIE_ID",
+      "SUBJECT_ID",
+      "STATUS_ID"
+    ],
+    "INFO_TYPE": [
+      "ID"
+    ],
+    "KEYWORD": [
+      "ID"
+    ],
+    "KIND_TYPE": [
+      "ID"
+    ],
+    "LINK_TYPE": [
+      "ID"
+    ],
+    "MOVIE_COMPANIES": [
+      "ID",
+      "MOVIE_ID",
+      "COMPANY_ID",
+      "COMPANY_TYPE_ID"
+    ],
+    "MOVIE_INFO": [
+      "ID",
+      "MOVIE_ID",
+      "INFO_TYPE_ID"
+    ],
+    "MOVIE_INFO_IDX": [
+      "ID",
+      "MOVIE_ID",
+      "INFO_TYPE_ID"
+    ],
+    "MOVIE_KEYWORD": [
+      "ID",
+      "MOVIE_ID",
+      "KEYWORD_ID"
+    ],
+    "MOVIE_LINK": [
+      "ID",
+      "MOVIE_ID",
+      "LINKED_MOVIE_ID",
+      "LINK_TYPE_ID"
+    ],
+    "NAME": [
+      "ID"
+    ],
+    "PERSON_INFO": [
+      "ID",
+      "PERSON_ID",
+      "INFO_TYPE_ID"
+    ],
+    "ROLE_TYPE": [
+      "ID"
+    ],
+    "TITLE": [
+      "ID",
+      "KIND_ID"
+    ]
+  },
+  "groupby_variables": {},
+  "equality_predicate_variables": {
+    "AKA_NAME": [
+      "NAME"
+    ],
+    "CAST_INFO": [
+      "NOTE"
+    ],
+    "CHAR_NAME": [
+      "NAME"
+    ],
+    "COMPANY_NAME": [
+      "COUNTRY_CODE",
+      "NAME"
+    ],
+    "COMPANY_TYPE": [
+      "KIND"
+    ],
+    "COMP_CAST_TYPE": [
+      "KIND"
+    ],
+    "INFO_TYPE": [
+      "INFO"
+    ],
+    "KEYWORD": [
+      "KEYWORD"
+    ],
+    "KIND_TYPE": [
+      "KIND"
+    ],
+    "LINK_TYPE": [
+      "LINK"
+    ],
+    "MOVIE_COMPANIES": [
+      "NOTE"
+    ],
+    "MOVIE_INFO": [
+      "INFO",
+      "NOTE"
+    ],
+    "NAME": [
+      "GENDER",
+      "NAME",
+      "NAME_PCODE_CF"
+    ],
+    "PERSON_INFO": [
+      "NOTE"
+    ],
+    "ROLE_TYPE": [
+      "ROLE"
+    ],
+    "TITLE": [
+      "PRODUCTION_YEAR",
+      "TITLE"
+    ]
+  },
+  "range_predicate_variables": {
+    "MOVIE_INFO_IDX": [
+      "INFO"
+    ],
+    "NAME": [
+      "NAME_PCODE_CF"
+    ],
+    "TITLE": [
+      "EPISODE_NR",
+      "PRODUCTION_YEAR"
+    ]
+  },
+  "fk_pk_joins_dict": {
+    "AKA_NAME": [
+      {
+        "fk": "PERSON_ID",
+        "pk_relation": "NAME",
+        "pk": "ID"
+      }
+    ],
+    "AKA_TITLE": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      }
+    ],
+    "CAST_INFO": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "PERSON_ID",
+        "pk_relation": "NAME",
+        "pk": "ID"
+      },
+      {
+        "fk": "PERSON_ROLE_ID",
+        "pk_relation": "CHAR_NAME",
+        "pk": "ID"
+      },
+      {
+        "fk": "ROLE_ID",
+        "pk_relation": "ROLE_TYPE",
+        "pk": "ID"
+      }
+    ],
+    "COMPLETE_CAST": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      }
+    ],
+    "MOVIE_COMPANIES": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "COMPANY_ID",
+        "pk_relation": "COMPANY_NAME",
+        "pk": "ID"
+      },
+      {
+        "fk": "COMPANY_TYPE_ID",
+        "pk_relation": "COMPANY_TYPE",
+        "pk": "ID"
+      }
+    ],
+    "MOVIE_INFO": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "INFO_TYPE_ID",
+        "pk_relation": "INFO_TYPE",
+        "pk": "ID"
+      }
+    ],
+    "MOVIE_INFO_IDX": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "INFO_TYPE_ID",
+        "pk_relation": "INFO_TYPE",
+        "pk": "ID"
+      }
+    ],
+    "MOVIE_KEYWORD": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "KEYWORD_ID",
+        "pk_relation": "KEYWORD",
+        "pk": "ID"
+      }
+    ],
+    "MOVIE_LINK": [
+      {
+        "fk": "MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "LINKED_MOVIE_ID",
+        "pk_relation": "TITLE",
+        "pk": "ID"
+      },
+      {
+        "fk": "LINK_TYPE_ID",
+        "pk_relation": "LINK_TYPE",
+        "pk": "ID"
+      }
+    ],
+    "PERSON_INFO": [
+      {
+        "fk": "PERSON_ID",
+        "pk_relation": "NAME",
+        "pk": "ID"
+      },
+      {
+        "fk": "INFO_TYPE_ID",
+        "pk_relation": "INFO_TYPE",
+        "pk": "ID"
+      }
+    ]
+  }
+}
