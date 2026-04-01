@@ -1,5 +1,8 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 import re
 
+from duckdb import DuckDBPyConnection
 
 from lpbound.config.lpbound_config import LpBoundConfig
 
@@ -27,6 +30,7 @@ def _add_count_to_distinct(sql_query: str) -> str:
 def estimate(
     input_query_sql: str,
     config: LpBoundConfig,
+    con: DuckDBPyConnection | None = None,
     dump_lp_program_file: str | None = None,
     verbose: bool = False,
 ) -> float:
@@ -42,8 +46,7 @@ def estimate(
     #     # replace the DISTINCT(...) with COUNT(DISTINCT(...))
     #     query_sql = _add_count_to_distinct(query_sql)
 
-    statistics, domain_size_statistics, jg = fetch_statistics_for_query(query_sql, config)
-
+    statistics, domain_size_statistics, jg = fetch_statistics_for_query(query_sql, config, con=con)
     method = "base" if jg.is_groupby else "berge"
     estimation, _ = run_solver(
         jg,
@@ -58,7 +61,7 @@ def estimate(
     return estimation
 
 
-def build_lpbound_statistics(lpbound_config: LpBoundConfig) -> dict[str, float]:
+def build_lpbound_statistics(lpbound_config: LpBoundConfig) -> Dict[str, float]:
     """Build LPBound statistics for the given benchmark."""
 
     times_dict = create_lpbound_statistics(lpbound_config)

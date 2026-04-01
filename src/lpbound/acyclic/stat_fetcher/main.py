@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from duckdb import DuckDBPyConnection
 
 from lpbound.config.lpbound_config import LpBoundConfig
@@ -14,31 +16,37 @@ from lpbound.acyclic.stat_fetcher.vertex_local_pred_stats import compute_predica
 from lpbound.utils.types import DomainSizeStats, Stats
 
 
-def fetch_statistics_for_query(query: str, config: LpBoundConfig) -> tuple[Stats, DomainSizeStats, JoinGraph]:
+def fetch_statistics_for_query(
+    query: str,
+    config: LpBoundConfig,
+    con: DuckDBPyConnection | None = None,
+) -> Tuple[Stats, DomainSizeStats, JoinGraph]:
     """
     Fetch statistics for a given query.
     """
     schema_data: BenchmarkSchema = load_benchmark_schema(config)
-    con: DuckDBPyConnection = DatabaseManager(schema_data).create_or_load_db(read_only=True)
+    own_con = con is None
+    if own_con:
+        con = DatabaseManager(schema_data).create_or_load_db(read_only=True)
+    assert con is not None
+    try:
+        jg = parse_sql_query_to_join_graph(query, schema_data)
+        statistics = _fetch_statistics(con, jg, config.p_max)
 
-    jg = parse_sql_query_to_join_graph(query, schema_data)
+        domain_size_statistics: DomainSizeStats = {}
+        if jg.is_groupby:
+            domain_size_statistics = fetch_groupby_domain_sizes(con, jg)
 
-    # Use the standalone fetch_statistics function
-    statistics = _fetch_statistics(con, jg, config.p_max)
+        for key, value in statistics.items():
+            assert len(value) > 0
 
-    domain_size_statistics: DomainSizeStats = {}
-    if jg.is_groupby:
-        domain_size_statistics = fetch_groupby_domain_sizes(con, jg)
-
-    # print("----> domain_size_statistics: ", domain_size_statistics)
-    for key, value in statistics.items():
-        # print(key, value)
-        assert len(value) > 0
-
-    return statistics, domain_size_statistics, jg
+        return statistics, domain_size_statistics, jg
+    finally:
+        if own_con:
+            con.close()
 
 
-def _fetch_statistics(con: DuckDBPyConnection, join_graph: JoinGraph, max_p: int) -> dict[tuple[str, str], list[float]]:
+def _fetch_statistics(con: DuckDBPyConnection, join_graph: JoinGraph, max_p: int) -> Dict[Tuple[str, str], List[float]]:
     """
     Main function to fetch all statistics for a join graph.
     Returns a dictionary mapping (alias, column) to statistics.
@@ -51,7 +59,7 @@ def _fetch_statistics(con: DuckDBPyConnection, join_graph: JoinGraph, max_p: int
     compute_predicate_ids(con, join_graph)
 
     # 2. Fetch predicate norms for each join column
-    statistics: dict[tuple[str, str], list[float]] = fetch_predicate_norms(con, join_graph, max_p)
+    statistics: Dict[Tuple[str, str], List[float]] = fetch_predicate_norms(con, join_graph, max_p)
 
     # 3. Compute join pool domain sizes
     compute_join_pool_domain_sizes(con, join_graph, statistics)

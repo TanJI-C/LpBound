@@ -29,6 +29,14 @@ def load_benchmark_schema(lpbound_config: LpBoundConfig) -> BenchmarkSchema:
     Loads the JSON file that defines the schema (relations, join_variables, etc.).
     Works with any schema following the expected structure.
     """
-    with open(f"{LpBoundPaths.SCHEMAS_DIR}/{lpbound_config.benchmark_name}_schema.json", "r") as f:
-        data: BenchmarkSchema = json.load(f)
-    return data
+    from pathlib import Path
+    
+    schema_path = Path(f"{LpBoundPaths.SCHEMAS_DIR}/{lpbound_config.benchmark_name}_schema.json")
+    
+    # Load the JSON specific schema if exists
+    if schema_path.exists():
+        with open(schema_path, "r") as f:
+            data: BenchmarkSchema = json.load(f)
+        return data
+    else:
+        raise FileNotFoundError(f"Schema file not found at {schema_path}")

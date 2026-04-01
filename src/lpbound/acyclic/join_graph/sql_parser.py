@@ -1,4 +1,8 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
+import re
 import sqlparse
+from sqlparse.lexer import Lexer
 from sqlparse.sql import IdentifierList, Identifier, Where, Comparison, Parenthesis
 from sqlparse.tokens import Whitespace, Comment, Operator
 
@@ -20,7 +24,10 @@ def parse_sql_query_to_join_graph(sql_str: str, schema_json: BenchmarkSchema) ->
 
     # schema information
     relations = list(schema_json["relations"].keys())
-
+    
+    lexer = Lexer.get_default_instance()
+    lexer.clear()
+    lexer.default_initialization()
     parsed = sqlparse.parse(sql_str)
     if not parsed:
         raise ValueError("Could not parse the SQL query.")
@@ -161,18 +168,14 @@ def parse_sql_query_to_join_graph(sql_str: str, schema_json: BenchmarkSchema) ->
 
             # if left_expr = "t.id", we split on ".", get alias="t", col="id"
             # same for right_expr. If right_expr doesn't have ".", treat as literal
-            if "." not in left_expr:
+            left_ref = parse_qualified_column_reference(left_expr)
+            if left_ref is None:
                 raise ValueError(f"Unsupported left expression: {left_expr}")
-            left_alias, left_col = left_expr.split(".")
-            left_alias = left_alias.upper()
-            left_col = left_col.upper()
+            left_alias, left_col = left_ref
 
-            # and right_expr is not a float like 3.5
-            if "." in right_expr and not right_expr.replace(".", "").isdigit():
-                # It's a join
-                right_alias, right_col = right_expr.split(".")
-                right_alias = right_alias.upper()
-                right_col = right_col.upper()
+            right_ref = parse_qualified_column_reference(right_expr)
+            if right_ref is not None and right_ref[0] in alias_to_table:
+                right_alias, right_col = right_ref
 
                 assert operator == "=", f"Only equality joins are supported for now. {operator} is not supported."
                 # Create an Edge between left_alias and right_alias
@@ -217,7 +220,7 @@ def parse_sql_query_to_join_graph(sql_str: str, schema_json: BenchmarkSchema) ->
 # ------------------------------
 
 
-def parse_table_identifier(identifier) -> tuple[str, str]:
+def parse_table_identifier(identifier) -> Tuple[str, str]:
     """
     For "title AS t" or "MOVIE_INFO mi", return (table_name, alias).
     """
@@ -228,15 +231,21 @@ def parse_table_identifier(identifier) -> tuple[str, str]:
     return (tbl_name, alias)
 
 
-def extract_comparisons(where_token: Where):
+def extract_comparisons(where_token):
     comps = []
-    for token in where_token.tokens:
+    # If the token is already a Parenthesis or Where, we iterate over its tokens
+    tokens = where_token.tokens if hasattr(where_token, "tokens") else [where_token]
+    for token in tokens:
         if isinstance(token, Comparison):
             comps.append(token)
         elif isinstance(token, IdentifierList):
             for sub_tok in token.get_identifiers():
                 if isinstance(sub_tok, Comparison):
                     comps.append(sub_tok)
+                elif hasattr(sub_tok, "tokens"):
+                    comps.extend(extract_comparisons(sub_tok))
+        elif hasattr(token, "tokens"):
+            comps.extend(extract_comparisons(token))
     return comps
 
 
@@ -250,6 +259,14 @@ def extract_comparison_parts(comp: Comparison):
 
     right_expr_str = comp.right.value
     return (left_expr_str.strip(), operator_str.strip(), right_expr_str.strip())
+
+
+def parse_qualified_column_reference(expr: str) -> Optional[Tuple[str, str]]:
+    normalized = expr.strip()
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*", normalized):
+        return None
+    alias, column = normalized.split(".", 1)
+    return alias.upper(), column.upper()
 
 
 def build_predicate(col_name: str, col_type: str, op: str, literal: str) -> EqualityPredicate | InequalityPredicate:
