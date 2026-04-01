@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from ortools.linear_solver import pywraplp
 from itertools import combinations
 
@@ -6,8 +8,8 @@ from lpbound.solver.solver_utils import entropy, sorted_set
 
 def add_basic_shannon_monotonicity_inequalities(
     solver: pywraplp.Solver,
-    lp_variables: dict[str, pywraplp.Variable],
-    entropy_variables_combinations: list[list[str]],
+    lp_variables: Dict[str, pywraplp.Variable],
+    entropy_variables_combinations: List[List[str]],
     verbose: bool = False,
 ):
 
@@ -34,8 +36,8 @@ def add_basic_shannon_monotonicity_inequalities(
 
 def add_basic_shannon_submodularity_inequalities(
     solver: pywraplp.Solver,
-    lp_variables: dict[str, pywraplp.Variable],
-    entropy_variables_combinations: list[list[str]],
+    lp_variables: Dict[str, pywraplp.Variable],
+    entropy_variables_combinations: List[List[str]],
     verbose: bool = False,
 ):
 

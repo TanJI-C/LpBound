@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 class LpBoundConfig:
 
     def __init__(
@@ -9,6 +11,8 @@ class LpBoundConfig:
         include_l0: bool = True,
         include_l_inf: bool = True,
         enable_groupby: bool = False,
+        rebuild_db: bool = False,
+        rebuild_statistics: bool = False,
     ):
 
         self.benchmark_name: str = benchmark_name
@@ -19,3 +23,5 @@ class LpBoundConfig:
         self.include_l0: bool = include_l0
         self.include_l_inf: bool = include_l_inf
         self.enable_groupby: bool = enable_groupby
+        self.rebuild_db: bool = rebuild_db
+        self.rebuild_statistics: bool = rebuild_statistics

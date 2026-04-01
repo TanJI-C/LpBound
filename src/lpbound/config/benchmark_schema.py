@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 from typing import TypedDict
 
@@ -15,12 +16,12 @@ class FkPkJoin(TypedDict):
 # Define the main schema type with more generic typing
 class BenchmarkSchema(TypedDict):
     name: str
-    relations: dict[str, dict[str, str]]  # Relation name -> (Column name -> Type)
-    join_variables: dict[str, list[str]]  # Relation name -> List of join columns
-    groupby_variables: dict[str, list[list[str]]]  # Relation name -> List of groupby column combinations
-    equality_predicate_variables: dict[str, list[str]]  # Relation name -> List of equality predicate columns
-    range_predicate_variables: dict[str, list[str]]  # Relation name -> List of range predicate columns
-    fk_pk_joins_dict: dict[str, list[FkPkJoin]]  # FK relation -> List of FK-PK join specifications
+    relations: Dict[str, Dict[str, str]]  # Relation name -> (Column name -> Type)
+    join_variables: Dict[str, List[str]]  # Relation name -> List of join columns
+    groupby_variables: Dict[str, List[List[str]]]  # Relation name -> List of groupby column combinations
+    equality_predicate_variables: Dict[str, List[str]]  # Relation name -> List of equality predicate columns
+    range_predicate_variables: Dict[str, List[str]]  # Relation name -> List of range predicate columns
+    fk_pk_joins_dict: Dict[str, List[FkPkJoin]]  # FK relation -> List of FK-PK join specifications
 
 
 def load_benchmark_schema(lpbound_config: LpBoundConfig) -> BenchmarkSchema:

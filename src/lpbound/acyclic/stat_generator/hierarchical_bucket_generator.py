@@ -1,7 +1,9 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 import math
 
 
-def get_quantiles(values: list[int | float | str], num_bins: int) -> list[int | float | str]:
+def get_quantiles(values: List[int | float | str], num_bins: int) -> List[int | float | str]:
     """
     Computes 'num_bins' approximate quantile boundaries for a sorted list of values.
     Returns a list of boundary values (right edges).
@@ -9,8 +11,8 @@ def get_quantiles(values: list[int | float | str], num_bins: int) -> list[int | 
     if len(values) == 0 or num_bins <= 0:
         return []
 
-    sorted_vals: list[int | float | str] = sorted(values)
-    edges: list[int | float | str] = []
+    sorted_vals: List[int | float | str] = sorted(values)
+    edges: List[int | float | str] = []
     n: int = len(sorted_vals)
     for i in range(1, num_bins + 1):
         idx: int = int(n * (i / (num_bins + 1)))
@@ -34,22 +36,22 @@ class HierarchicalBucketGenerator:
       (None, 1901, 1, "base_1") => The leftmost interval of base_1 is open-ended on the left side.
     """
 
-    def __init__(self, values: list[int | float | str | None], num_bins: int):
+    def __init__(self, values: List[int | float | str | None], num_bins: int):
         """
         :param values: The list of column values to bucketize.
         :param num_bins: The number of desired bins (at the finest granularity).
         """
         # Remove None
-        cleaned_values: list[int | float | str] = [v for v in values if v is not None]
+        cleaned_values: List[int | float | str] = [v for v in values if v is not None]
 
         # Sort values
-        self.values_sorted: list[int | float | str] = sorted(cleaned_values)
+        self.values_sorted: List[int | float | str] = sorted(cleaned_values)
         self.count: int = len(self.values_sorted)
         if self.count == 0:
             # No data => no intervals
             self.num_bins: int = 0
-            self.edges: list[int | float | str] = []
-            self.step_sizes: list[int] = []
+            self.edges: List[int | float | str] = []
+            self.step_sizes: List[int] = []
             return
 
         self.min_value: int | float | str = self.values_sorted[0]
@@ -72,8 +74,8 @@ class HierarchicalBucketGenerator:
             self.step_sizes = []
 
     def _finalize_open_ended(
-        self, intervals: list[tuple[int | float | None, int | float | None, int, str]]
-    ) -> list[tuple[int | float | None, int | float | None, int, str]]:
+        self, intervals: List[Tuple[int | float | None, int | float | None, int, str]]
+    ) -> List[Tuple[int | float | None, int | float | None, int, str]]:
         """
         Given a list of intervals for a single layer (either base_* or offset_*),
         make them open-ended on the leftmost and rightmost intervals.
@@ -108,7 +110,7 @@ class HierarchicalBucketGenerator:
 
         return intervals
 
-    def generate_buckets(self) -> list[tuple[int | float | None, int | float | None, int, str]]:
+    def generate_buckets(self) -> List[Tuple[int | float | None, int | float | None, int, str]]:
         """
         Build the list of intervals. For each step_size, we consider:
           1) base_{step_size} intervals => treat as one layer
@@ -128,7 +130,7 @@ class HierarchicalBucketGenerator:
             # ----------------------------------------------------
             # 1) Build base intervals for base_{step_size}
             # ----------------------------------------------------
-            base_intervals: list[tuple[int | float | None, int | float | None, int, str]] = []
+            base_intervals: List[Tuple[int | float | None, int | float | None, int, str]] = []
             left = self.min_value
             base_start_idx = step_size - 1
             if base_start_idx < len(self.edges):

@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from collections import defaultdict
 
 from lpbound.acyclic.join_graph.vertex import Vertex
@@ -16,9 +18,9 @@ class UnionFind:
 
     def __init__(self):
         # parent[x] = x's parent in the union-find tree
-        self.parent: dict[AliasColPair, AliasColPair] = {}
+        self.parent: Dict[AliasColPair, AliasColPair] = {}
         # rank[x] = rank (approximate tree height) for union by rank
-        self.rank: dict[AliasColPair, int] = {}
+        self.rank: Dict[AliasColPair, int] = {}
 
     def find(self, x: AliasColPair) -> AliasColPair:
         """Path compression find."""
@@ -53,18 +55,18 @@ class JoinGraph:
     def __init__(self, is_groupby: bool = False):
         self.is_groupby: bool = is_groupby
 
-        self.vertices: dict[str, Vertex] = {}  # alias -> Vertex
-        self.edges: list[Edge] = []  # list of Edge
+        self.vertices: Dict[str, Vertex] = {}  # alias -> Vertex
+        self.edges: List[Edge] = []  # list of Edge
 
         self.uf: UnionFind = UnionFind()
 
         # We will build the "join pool" after we have all edges
         # (alias, col_name) -> pool_id
-        self.join_pool_map: dict[AliasColPair, int] = {}
+        self.join_pool_map: Dict[AliasColPair, int] = {}
         # alias -> [pool_id]: map of aliases to the pool_ids they are in
-        self.join_pool_alias_map: dict[str, list[int]] = {}
+        self.join_pool_alias_map: Dict[str, List[int]] = {}
         # pool_id -> domain size/l0-norm
-        self.join_pool_domain_size: dict[int, int] = {}
+        self.join_pool_domain_size: Dict[int, int] = {}
 
     def add_vertex(self, v: Vertex):
         self.vertices[v.alias] = v
@@ -106,7 +108,7 @@ class JoinGraph:
         we add edges among them pairwise if they don't already exist.
         """
         # 1) Gather union-find representatives
-        rep_to_items: defaultdict[AliasColPair, list[AliasColPair]] = defaultdict(list)
+        rep_to_items: defaultdict[AliasColPair, List[AliasColPair]] = defaultdict(list)
         # For each vertex, for each join column, gather them by rep
         for alias, vtx in self.vertices.items():
             for col_name in vtx.join_columns:
@@ -115,7 +117,7 @@ class JoinGraph:
                 rep_to_items[rep].append((alias, col_name))
 
         # 2) We track existing edges in a set to avoid duplicates
-        existing_edges: set[tuple[str, str, str, str]] = set()
+        existing_edges: set[Tuple[str, str, str, str]] = set()
         for e in self.edges:
             # We'll store them in both directions for easy checking
             existing_edges.add((e.alias_left, e.join_var_left, e.alias_right, e.join_var_right))

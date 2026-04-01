@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 """
 sql_tables.py
 
@@ -38,7 +40,7 @@ CREATE TABLE {table_name} (
 def no_pred_groupby_domain_sizes_sql(
     joined_table_name: str,  # if is_fk_pk_join, this is the joined table name, else this is the rel_name
     rel_name: str,
-    groupby_cols: list[str],
+    groupby_cols: List[str],
     aggregator_type: str,
     cfg: LpBoundConfig,
     fk_rel: str | None = None,
@@ -102,7 +104,7 @@ INSERT INTO groupby_domain_sizes BY NAME
 def mcv_groupby_domain_sizes_sql(
     joined_table_name: str,  # if is_fk_pk_join, this is the joined table name, else this is the rel_name
     rel_name: str,
-    groupby_cols: list[str],
+    groupby_cols: List[str],
     aggregator_type: str,
     cfg: LpBoundConfig,
     mcv_table_name: str,
@@ -184,7 +186,7 @@ INSERT INTO groupby_domain_sizes BY NAME
 def non_mcv_groupby_domain_sizes_sql(
     joined_table_name: str,  # if is_fk_pk_join, this is the joined table name, else this is the rel_name
     rel_name: str,
-    groupby_cols: list[str],
+    groupby_cols: List[str],
     aggregator_type: str,
     cfg: LpBoundConfig,
     mcv_table_name: str,
@@ -253,7 +255,7 @@ INSERT INTO groupby_domain_sizes BY NAME
 def range_groupby_domain_sizes_sql(
     joined_table_name: str,  # if is_fk_pk_join, this is the joined table name, else this is the rel_name
     rel_name: str,
-    groupby_cols: list[str],
+    groupby_cols: List[str],
     aggregator_type: str,
     cfg: LpBoundConfig,
     histogram_table_name: str,

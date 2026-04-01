@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 class Edge:
     def __init__(self, alias_left: str, alias_right: str, join_var_left: str, join_var_right: str):
         """

@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from duckdb import DuckDBPyConnection
 
 from lpbound.acyclic.join_graph.vertex import Vertex
@@ -31,7 +33,7 @@ def _compute_mcv_ids(con: DuckDBPyConnection, vertex: Vertex) -> None:
             raise ValueError(f"Unsupported value type: {predicate.value_type}")
 
         # There might be no MCV for this predicate
-        res: tuple[int] | None = con.execute(sql).fetchone()
+        res: Tuple[int] | None = con.execute(sql).fetchone()
         if res is not None:
             predicate_id = res[0]
             predicate.set_mcv_id(predicate_id)
@@ -61,7 +63,7 @@ def _compute_range_ids(con: DuckDBPyConnection, vertex: Vertex) -> None:
         else:
             raise ValueError(f"Unsupported value type: {predicate.value_type}")
 
-        conditions: list[str] = []
+        conditions: List[str] = []
         if predicate.left_value is not None:
             conditions.append(f"(lower_bound IS NULL OR lower_bound <= {left_value})")
         else:
@@ -80,7 +82,7 @@ def _compute_range_ids(con: DuckDBPyConnection, vertex: Vertex) -> None:
         LIMIT 1
         """
 
-        res: tuple[int] | None = con.execute(sql).fetchone()
+        res: Tuple[int] | None = con.execute(sql).fetchone()
         if res is not None:
             bucket_id = res[0]
             predicate.set_range_id(bucket_id)

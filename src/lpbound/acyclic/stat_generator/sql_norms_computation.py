@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 """
 sql_norms_computation.py
 
@@ -20,7 +22,7 @@ from .sql_utils import (
 
 def generate_aggregator_sql(
     table_name: str,  # joined table name
-    groupby_cols: list[str],
+    groupby_cols: List[str],
     pk_table: str | None,
     join_var: str,
     pred_col: str | None = None,
@@ -28,7 +30,7 @@ def generate_aggregator_sql(
     is_mcv: bool = True,
     is_range: bool = False,
     is_fk_pk_join: bool = False,
-) -> list[SqlCommand]:
+) -> List[SqlCommand]:
     """
     Create a temp aggregator table grouping by (pred_col, join_var) => deg=COUNT(*).
     We'll call this "Degree" table. A degree sequence.
@@ -44,14 +46,14 @@ def generate_aggregator_sql(
     ]
     """
     # 1) Construct the aggregator table name
-    agg_suffix: list[str] = []
+    agg_suffix: List[str] = []
     if pred_col:
         agg_suffix.append(pred_col)
     agg_suffix.append(join_var)
     agg_table_name = f"Degree_{table_name}_{'_'.join(agg_suffix)}"
 
     # 2) Possibly drop the table if configured
-    commands: list[SqlCommand] = []
+    commands: List[SqlCommand] = []
     commands.extend(maybe_drop_temp_table_sql(agg_table_name))
 
     # 3) Decide on JOIN style + SQL tag
@@ -158,14 +160,14 @@ ORDER BY deg DESC
 def generate_lp_sql_no_pred(
     con: DuckDBPyConnection,
     agg_table_name: str,
-    groupby_cols: list[str],
-    p_list: list[int],
+    groupby_cols: List[str],
+    p_list: List[int],
     rel_name: str,
     jv: str,
     aggregator_type: str,
     cfg: LpBoundConfig,
     is_groupby_query: bool,
-) -> list[SqlCommand]:
+) -> List[SqlCommand]:
     """
     The prefix optimization is applied here.
 
@@ -179,7 +181,7 @@ def generate_lp_sql_no_pred(
     row_count: int = con.execute(f"SELECT COUNT(DISTINCT({jv})) FROM {rel_name}").fetchone()[0]
 
     # figure out the prefix sizes
-    prefixes: list[int] = []
+    prefixes: List[int] = []
     val: int = 1
     while val <= row_count:
         prefixes.append(val)
@@ -194,7 +196,7 @@ def generate_lp_sql_no_pred(
     lp_cols = lp_insert_column_list(p_list, cfg)
 
     # We'll produce multiple INSERT SELECT statements (one per prefix)
-    result_cmds: list[SqlCommand] = []
+    result_cmds: List[SqlCommand] = []
 
     # related to groupby cols
     norm_table_name = "norms_groupby" if is_groupby_query else "norms"
@@ -244,8 +246,8 @@ FROM (
 
 def generate_lp_sql(
     agg_table_name: str,
-    groupby_cols: list[str],
-    p_list: list[int],
+    groupby_cols: List[str],
+    p_list: List[int],
     rel_name: str,
     jv: str,
     aggregator_type: str,
@@ -333,9 +335,9 @@ INSERT INTO {norm_table_name}(
 
 def generate_nonmcv_max_sql(
     agg_table_name: str,
-    groupby_cols: list[str],
+    groupby_cols: List[str],
     pred_col: str,
-    p_list: list[int],
+    p_list: List[int],
     rel_name: str,
     jv: str,
     aggregator_type: str,
@@ -352,7 +354,7 @@ def generate_nonmcv_max_sql(
     (Used to capture the "worst-case" among non-MCV values.)
     """
     # Build subselect columns
-    sub_exprs: list[str] = []
+    sub_exprs: List[str] = []
     # Only do l0 if included
     if cfg.include_l0 and 0 in p_list:
         sub_exprs.append("COUNT(*) AS l0")
@@ -366,7 +368,7 @@ def generate_nonmcv_max_sql(
     subselect_clause = ", ".join(sub_exprs)
 
     # Now we do the outer select => MAX(lX)
-    out_cols: list[str] = []
+    out_cols: List[str] = []
     if cfg.include_l0 and 0 in p_list:
         out_cols.append("MAX(l0) AS l0")
     for p in p_list:
@@ -454,8 +456,8 @@ INSERT INTO {norm_table_name}(
 def generate_range_agg_sql(
     agg_table_name: str,
     histogram_table_name: str,
-    groupby_cols: list[str],
-    p_list: list[int],
+    groupby_cols: List[str],
+    p_list: List[int],
     rel_name: str,
     jv: str,
     aggregator_type: str,

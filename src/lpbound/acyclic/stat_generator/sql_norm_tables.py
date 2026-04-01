@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 """
 sql_tables.py
 
@@ -18,7 +20,7 @@ def create_norms_table_if_not_exists(cfg: LpBoundConfig) -> SqlCommand:
     # But only if cfg.include_l0 is True.
     # And also conditionally l_inf if cfg.include_l_inf is True.
 
-    col_defs: list[str] = []
+    col_defs: List[str] = []
     if cfg.include_l0:
         col_defs.append("l0 DOUBLE")
     for p in range(cfg.p_min, cfg.p_max + 1):
@@ -57,13 +59,13 @@ CREATE TABLE {table_name} (
 # The code below is not used in the current implementation
 
 
-def create_dimension_tables() -> list[SqlCommand]:
+def create_dimension_tables() -> List[SqlCommand]:
     """
     Returns the SQL commands to create dimension tables:
       - dim_relations: store relation_id + relation_name
     In a later step, we'll populate these tables from schema_data.
     """
-    cmds: list[SqlCommand] = []
+    cmds: List[SqlCommand] = []
 
     # 1) dim_relations
     create_dim_relations_sql = """
@@ -120,8 +122,8 @@ def create_dimension_tables() -> list[SqlCommand]:
 
 # this function is not used in the current implementation
 def populate_dimension_tables(
-    schema_data: BenchmarkSchema, aggregator_types: dict[str, int]
-) -> tuple[list[SqlCommand], list[str], list[list[str]], dict[int, int], dict[int, int]]:
+    schema_data: BenchmarkSchema, aggregator_types: Dict[str, int]
+) -> Tuple[List[SqlCommand], List[str], List[List[str]], Dict[int, int], Dict[int, int]]:
     """
     Populate the dimension tables with data from schema_data.
     Returns:
@@ -131,9 +133,9 @@ def populate_dimension_tables(
         - fkpk_id_to_fk_id mapping
         - fkpk_id_to_pk_id mapping
     """
-    cmds: list[SqlCommand] = []
-    relations: list[str] = list(schema_data["relations"].keys())
-    relation_variables: list[list[str]] = [list(schema_data["relations"][rel_name].keys()) for rel_name in relations]
+    cmds: List[SqlCommand] = []
+    relations: List[str] = list(schema_data["relations"].keys())
+    relation_variables: List[List[str]] = [list(schema_data["relations"][rel_name].keys()) for rel_name in relations]
 
     # Maps for FK-PK relationships
     fkpk_id_to_fk_id = {}

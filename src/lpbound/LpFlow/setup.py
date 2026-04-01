@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
 import os

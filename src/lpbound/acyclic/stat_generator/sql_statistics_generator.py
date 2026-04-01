@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 #!/usr/bin/env python3
 """
 statistics_generator.py
@@ -37,7 +39,7 @@ from .sql_norms_computation import (
 ### --------------------------------------------------------------------------
 
 
-def generate_all_sql_for_benchmark(con: DuckDBPyConnection, lpnorm_config: LpBoundConfig) -> list[SqlCommand]:
+def generate_all_sql_for_benchmark(con: DuckDBPyConnection, lpnorm_config: LpBoundConfig) -> List[SqlCommand]:
     """
     Return a list of structured SQL commands for the given benchmark config.
     We'll parse the JSON from lpnorm_config.schema_path, then build aggregator queries.
@@ -69,7 +71,7 @@ def generate_all_sql_for_benchmark(con: DuckDBPyConnection, lpnorm_config: LpBou
     # (But if you prefer to skip p=0 entirely, you can condition here.)
     p_list = [0] + list(range(lpnorm_config.p_min, lpnorm_config.p_max + 1))
 
-    all_cmds: list[SqlCommand] = []
+    all_cmds: List[SqlCommand] = []
 
     # 1) Create the norms table  and the dimension tables
     create_norms_table_cmd = create_norms_table_if_not_exists(lpnorm_config)
@@ -140,7 +142,7 @@ def generate_all_sql_for_benchmark(con: DuckDBPyConnection, lpnorm_config: LpBou
                 pk_col = join_info["pk"]
                 pk_pred_cols = eq_pred_vars.get(pk_rel, []) + range_pred_vars.get(pk_rel, [])
                 pk_pred_cols = list(set(pk_pred_cols))
-                join_cmds: list[SqlCommand] = generate_joined_table_sql(
+                join_cmds: List[SqlCommand] = generate_joined_table_sql(
                     fk_table=rel_name,
                     pk_table=pk_rel,
                     fk_col=fk_col,

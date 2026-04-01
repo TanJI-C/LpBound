@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from pathlib import Path
 import sys
 
@@ -21,7 +22,7 @@ class LpBoundPaths:
     GENERATED_SQL_DIR: Path = OUTPUT_DIR / "statistics_sql"
 
     # used for duckdb to find the csv data directory
-    CSV_DATA_DIR_MAP: dict[str, str] = {
+    CSV_DATA_DIR_MAP: Dict[str, str] = {
         "imdb": "imdb",
         "joblight": "imdb",
         "jobrange": "imdb",
@@ -30,7 +31,7 @@ class LpBoundPaths:
     }
 
     # Used for duckdb to find the database name
-    WORKLOAD_TO_DB_MAP: dict[str, str] = {
+    WORKLOAD_TO_DB_MAP: Dict[str, str] = {
         "jobjoin": "imdb",
         "joblight": "joblight",
         "jobrange": "jobrange",
@@ -38,7 +39,7 @@ class LpBoundPaths:
         "subgraph_matching": "subgraph_matching",
     }
 
-    GROUPBY_DB_NAME_DICT: dict[str, str] = {
+    GROUPBY_DB_NAME_DICT: Dict[str, str] = {
         "joblight": "imdb",
         "jobrange": "imdb",
         "stats": "stats",

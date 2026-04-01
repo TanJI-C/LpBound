@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from lpbound.acyclic.join_graph.join_graph import JoinGraph
 
 from lpbound.solver.berge_lp_solver import run_berge_lp_solver

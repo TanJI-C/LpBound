@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 sql_utils.py
 
@@ -16,7 +17,7 @@ class SqlCommand(TypedDict):
     tag: str
 
 
-def maybe_drop_temp_table_sql(table_name: str) -> list[SqlCommand]:
+def maybe_drop_temp_table_sql(table_name: str) -> List[SqlCommand]:
     """
     If drop_temp_tables is True, return a command to drop the table. Otherwise empty.
     We'll return a list of command dicts so it's consistent with the rest of the code.
@@ -24,13 +25,13 @@ def maybe_drop_temp_table_sql(table_name: str) -> list[SqlCommand]:
     return [{"sql": f"DROP TABLE IF EXISTS {table_name};", "tag": "DROP_TEMP_TABLE"}]
 
 
-def lp_select_expressions(p_list: list[int], cfg: LpBoundConfig) -> list[str]:
+def lp_select_expressions(p_list: List[int], cfg: LpBoundConfig) -> List[str]:
     """
     Returns a list of SELECT expressions for computing Lp norms over 'deg'.
     For example: ["COUNT(*) AS l0", "SUM(POWER(deg,1)) AS l1", "MAX(deg) AS l_inf"]
     but only includes l0 if cfg.include_l0 is True, and l_inf if cfg.include_l_inf.
     """
-    select_exprs: list[str] = []
+    select_exprs: List[str] = []
 
     # l0 => COUNT(*)
     # only if include_l0 is True
@@ -53,14 +54,14 @@ def lp_select_expressions(p_list: list[int], cfg: LpBoundConfig) -> list[str]:
     return select_exprs
 
 
-def lp_insert_column_list(p_list: list[int], cfg: LpBoundConfig) -> str:
+def lp_insert_column_list(p_list: List[int], cfg: LpBoundConfig) -> str:
     """
     Return the CSV string for the columns we will INSERT into norms(...),
     matching the order of _lp_select_expressions().
     e.g. "l0, l1, l2, ..., l10, l_inf" (conditionally including l0, l_inf).
     """
     # We'll use the same logic as above, but just want the names, not the expressions
-    col_names: list[str] = []
+    col_names: List[str] = []
     if cfg.include_l0 and 0 in p_list:
         col_names.append("l0")
     for p in p_list:
@@ -72,7 +73,7 @@ def lp_insert_column_list(p_list: list[int], cfg: LpBoundConfig) -> str:
     return ", ".join(col_names)
 
 
-def ordered_non_dup_vars(vars: list[str]) -> list[str]:
+def ordered_non_dup_vars(vars: List[str]) -> List[str]:
     """
     Return a list of variables with duplicates removed, ordered by lex order.
     """

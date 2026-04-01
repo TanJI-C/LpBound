@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from lpbound.acyclic.stat_generator.sql_utils import SqlCommand
 from lpbound.config.benchmark_schema import load_benchmark_schema
 from lpbound.config.lpbound_config import LpBoundConfig
@@ -6,7 +8,7 @@ from lpbound.duckdb_adapter.duckdb_manager import DatabaseManager
 from lpbound.utils.sql_execution import execute_with_timing, write_commands_to_file
 
 
-def build_subgraph_matching_statistics(config: LpBoundConfig) -> dict[str, float]:
+def build_subgraph_matching_statistics(config: LpBoundConfig) -> Dict[str, float]:
 
     assert config.benchmark_name == "subgraph_matching"
 
@@ -18,7 +20,7 @@ def build_subgraph_matching_statistics(config: LpBoundConfig) -> dict[str, float
     con = db_manager.create_or_load_db(read_only=False)
 
     # 3) Generate the Lp-norm SQL commands
-    commands: list[SqlCommand] = _generate_subgraph_matching_sql(config)
+    commands: List[SqlCommand] = _generate_subgraph_matching_sql(config)
 
     # 3a) write the commands to a file for inspection
     groupby_suffix = "_groupby" if config.enable_groupby else ""
@@ -27,7 +29,7 @@ def build_subgraph_matching_statistics(config: LpBoundConfig) -> dict[str, float
     print(f"Done. See {LpBoundPaths.GENERATED_SQL_DIR} for all generated SQL statements.")
 
     # 4) Execute with timing
-    times_dict = execute_with_timing(commands, con)
+    times_dict = execute_with_timing(commands, con, duckdb_file=db_manager.duckdb_file)
 
     # 5) Print a breakdown
     print("=== Execution Time Breakdown by Tag ===")
@@ -52,7 +54,7 @@ def _create_norms_table_if_not_exists(cfg: LpBoundConfig) -> SqlCommand:
     # But only if cfg.include_l0 is True.
     # And also conditionally l_inf if cfg.include_l_inf is True.
 
-    col_defs: list[str] = []
+    col_defs: List[str] = []
     for p in range(cfg.p_min, cfg.p_max + 1):
         col_defs.append(f"l{p} DOUBLE")
     if cfg.include_l_inf:
@@ -75,7 +77,7 @@ CREATE TABLE norms (
     return SqlCommand(sql=create_sql, tag="CREATE_NORM_TABLE")
 
 
-def _generate_subgraph_matching_sql(config: LpBoundConfig) -> list[SqlCommand]:
+def _generate_subgraph_matching_sql(config: LpBoundConfig) -> List[SqlCommand]:
 
     select_clause = [f"SUM(POWER(deg,{p})) AS l{p}" for p in range(1, config.p_max + 1)]
     if config.include_l_inf:
@@ -94,7 +96,7 @@ def _generate_subgraph_matching_sql(config: LpBoundConfig) -> list[SqlCommand]:
     # pred_col_id = 0
     # pred_value_id = 0
 
-    cmds: list[SqlCommand] = []
+    cmds: List[SqlCommand] = []
 
     cmds.append(_create_norms_table_if_not_exists(config))
 

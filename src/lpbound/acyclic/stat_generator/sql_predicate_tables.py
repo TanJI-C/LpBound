@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 sql_queries.py
 
@@ -18,11 +19,11 @@ def generate_joined_table_sql(
     pk_table: str,
     fk_col: str,
     pk_col: str,
-    fk_join_cols: list[str],
-    pk_pred_cols: list[str],
+    fk_join_cols: List[str],
+    pk_pred_cols: List[str],
     is_groupby_query: bool,
-    groupby_vars_list: list[list[str]],
-) -> list[SqlCommand]:
+    groupby_vars_list: List[List[str]],
+) -> List[SqlCommand]:
     """
     This function is for creating the fk-pk join tables.
     Returns structured commands for:
@@ -30,7 +31,7 @@ def generate_joined_table_sql(
       2) Creating the joined table by left-joining FK->PK
     """
     joined_table_name = f"{fk_table}_{fk_col}_{pk_col}_{pk_table}"
-    commands: list[SqlCommand] = []
+    commands: List[SqlCommand] = []
 
     # Possibly drop the table if it exists
     drop_sql = f"DROP TABLE IF EXISTS {joined_table_name};"
@@ -65,13 +66,13 @@ JOIN {pk_table}
     return commands
 
 
-def generate_mcv_table_sql(table_name: str, pred_col: str, cfg: LpBoundConfig) -> list[SqlCommand]:
+def generate_mcv_table_sql(table_name: str, pred_col: str, cfg: LpBoundConfig) -> List[SqlCommand]:
     """
     Create a temp table for top MCVs of (table_name.pred_col).
     Includes an auto-generated mcv_id column.
     """
     mcv_table_name = f"{table_name}_{pred_col}_mcv"
-    commands: list[SqlCommand] = []
+    commands: List[SqlCommand] = []
 
     # Possibly drop the table if it exists
     drop_sql = f"DROP TABLE IF EXISTS {mcv_table_name};"
@@ -102,7 +103,7 @@ FROM base;
 
 def generate_histogram_table_sql(
     con: DuckDBPyConnection, table_name: str, pred_col: str, data_type: str, cfg: LpBoundConfig
-) -> list[SqlCommand]:
+) -> List[SqlCommand]:
     """
     Generate a 'histogram' table with hierarchical bucket boundaries
     for range queries.
@@ -147,7 +148,7 @@ CREATE TABLE {histogram_table_name} (
 );
 """.strip()
 
-    processed_hierarchical_buckets: list[tuple[int | str | float | None, int | str | float | None, int, str]] = []
+    processed_hierarchical_buckets: List[Tuple[int | str | float | None, int | str | float | None, int, str]] = []
     # lower bound or upper bound can be None
     # if they are None, we need to convert them to NULL
     # if they are not None, we need to convert them to the data type

@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from collections import defaultdict
 from ortools.linear_solver import pywraplp
 
@@ -7,11 +9,11 @@ from lpbound.utils.types import AliasColPair
 
 def create_additivity_lp_variables(
     solver: pywraplp.Solver,
-    join_pool_map: dict[AliasColPair, int],
-    join_pool_alias_map: dict[str, list[int]],
-    aliases: list[str],
+    join_pool_map: Dict[AliasColPair, int],
+    join_pool_alias_map: Dict[str, List[int]],
+    aliases: List[str],
     verbose: bool = False,
-) -> tuple[dict[str, pywraplp.Variable], pywraplp.Objective]:
+) -> Tuple[Dict[str, pywraplp.Variable], pywraplp.Objective]:
     """
     join_pools: list of join pools; we actually just need their ids
     join_pool_alias_map: map of aliases to the pool_ids they are in
@@ -26,7 +28,7 @@ def create_additivity_lp_variables(
     lp_variables = {}  # to store the variables used in the LP program
     join_pool_ids = set(join_pool_map.values())
 
-    alias_variables_list: list[pywraplp.Variable] = []
+    alias_variables_list: List[pywraplp.Variable] = []
     join_variables_map: defaultdict[str, int] = defaultdict(
         int
     )  # pool_id -> number of times it appears in the relations

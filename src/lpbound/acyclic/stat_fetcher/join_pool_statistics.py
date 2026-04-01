@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from duckdb import DuckDBPyConnection
 
 from lpbound.acyclic.join_graph.join_graph import JoinGraph
@@ -32,7 +34,7 @@ def compute_join_pool_domain_size(
     # Get the alias-column pairs in the pool
     alias_col_pairs = [pair for pair in join_graph.join_pool_map if join_graph.join_pool_map[pair] == pool_id]
 
-    num_distinct_values: list[int] = []
+    num_distinct_values: List[int] = []
 
     # Get l0 norms from existing statistics
     for alias, col in alias_col_pairs:

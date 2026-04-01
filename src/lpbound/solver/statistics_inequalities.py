@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 # pyright: reportMissingTypeStubs=false, reportOperatorIssue=false
 # pyright: reportUnknownVariableType=information, reportUnknownMemberType=information, reportUnknownArgumentType=information
 
@@ -10,10 +12,10 @@ from lpbound.utils.types import DomainSizeStats, Stats, AliasColPair
 
 def add_statistics_inequalities(
     solver: pywraplp.Solver,
-    lp_variables: dict[str, pywraplp.Variable],
+    lp_variables: Dict[str, pywraplp.Variable],
     statistics_dict: Stats,  # [(alias, join_column)] -> [lp_norm]
-    join_pool_map: dict[AliasColPair, int],
-    join_pool_alias_map: dict[str, list[int]],
+    join_pool_map: Dict[AliasColPair, int],
+    join_pool_alias_map: Dict[str, List[int]],
     verbose: bool = False,
 ):
 
@@ -60,7 +62,7 @@ def add_statistics_inequalities(
 
 def add_domain_size_inequalities(
     solver: pywraplp.Solver,
-    lp_variables: dict[str, pywraplp.Variable],
+    lp_variables: Dict[str, pywraplp.Variable],
     domain_size_statistics: DomainSizeStats,
     verbose: bool = False,
 ):

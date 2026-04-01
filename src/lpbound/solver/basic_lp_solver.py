@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 import numpy as np
 from ortools.linear_solver import pywraplp
 
@@ -15,15 +17,15 @@ from lpbound.utils.types import DomainSizeStats, Stats, AliasColPair
 
 
 def run_base_lp_solver(
-    join_pool_map: dict[AliasColPair, int],
-    join_pool_alias_map: dict[str, list[int]],
-    aliases: list[str],
+    join_pool_map: Dict[AliasColPair, int],
+    join_pool_alias_map: Dict[str, List[int]],
+    aliases: List[str],
     statistics_dict: Stats,
     domain_size_statistics: DomainSizeStats,
     demo_mode: bool = False,
     dump_lp_program_file: str | None = None,
     verbose: bool = False,
-) -> tuple[float, list[tuple[str, float]]]:
+) -> Tuple[float, List[Tuple[str, float]]]:
     # initialize solver and create variables for the lp program
     solver = pywraplp.Solver.CreateSolver("GLOP")
 

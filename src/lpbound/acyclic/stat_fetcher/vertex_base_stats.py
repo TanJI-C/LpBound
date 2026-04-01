@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from duckdb import DuckDBPyConnection
 
 from lpbound.acyclic.join_graph.join_graph import JoinGraph
@@ -29,8 +31,8 @@ def _produce_base_norms_sql(vertex: Vertex, join_column: str, prefix_value: int,
 
 
 def fetch_base_norms(
-    con: DuckDBPyConnection, join_graph: JoinGraph, statistics: dict[tuple[str, str], list[float]], max_p: int
-) -> dict[tuple[str, str], list[float]]:
+    con: DuckDBPyConnection, join_graph: JoinGraph, statistics: Dict[Tuple[str, str], List[float]], max_p: int
+) -> Dict[Tuple[str, str], List[float]]:
     """
     Fetch base norms for all join columns.
     This function modifies the provided statistics dictionary and returns it.
@@ -46,7 +48,7 @@ def fetch_base_norms(
             assert norms is not None and len(norms) > 0
 
             # Take the MIN of these norms and existing norms
-            result_norms: list[float] = []
+            result_norms: List[float] = []
             pred_norms = statistics.get((v.alias, join_column), None)
 
             for i in range(len(norms)):

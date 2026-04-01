@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 import multiprocessing
 from ortools.linear_solver import pywraplp
 from itertools import combinations
@@ -5,13 +7,13 @@ from itertools import combinations
 from lpbound.solver.solver_utils import entropy, sorted_set
 
 
-def generate_combinations(i: int, objective_entropy_variables: list[str]):
+def generate_combinations(i: int, objective_entropy_variables: List[str]):
     return list(combinations(objective_entropy_variables, i))
 
 
 def create_and_get_lp_variables(
-    solver: pywraplp.Solver, join_pool_ids: set[int], aliases: list[str], verbose: bool = False
-) -> tuple[dict[str, pywraplp.Variable], str, list[list[str]]]:
+    solver: pywraplp.Solver, join_pool_ids: set[int], aliases: List[str], verbose: bool = False
+) -> Tuple[Dict[str, pywraplp.Variable], str, List[List[str]]]:
     """
     join_pools: list of join pools; we actually just need their ids
     relations: list of relations
@@ -21,10 +23,10 @@ def create_and_get_lp_variables(
     Then, we create the combinations of these variables, such as {0_T, 0_MC}, {0_T, 0_MC, 1}, ...
     """
 
-    lp_variables: dict[str, pywraplp.Variable] = {}  # to store the variables used in the LP program
+    lp_variables: Dict[str, pywraplp.Variable] = {}  # to store the variables used in the LP program
     # join_pool_ids = set(join_pool_map.values())
 
-    base_variables: list[str] = []
+    base_variables: List[str] = []
     # create the variables for the join pools
     for pool_id in join_pool_ids:
         base_variables.append(str(pool_id))

@@ -1,21 +1,23 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from lpbound.acyclic.join_graph.predicate import EqualityPredicate, InequalityPredicate
 
 
 class Vertex:
-    def __init__(self, alias: str, relation_id: int, relation_name: str, groupby_vars: list[str] | None = None):
+    def __init__(self, alias: str, relation_id: int, relation_name: str, groupby_vars: List[str] | None = None):
         self.alias: str = alias.upper()
         self.relation_id: int = relation_id
         self.relation_name: str = relation_name.upper()
-        self.groupby_vars: list[str] = groupby_vars or []
+        self.groupby_vars: List[str] = groupby_vars or []
 
         # Which columns in this table are used in join conditions?
         self.join_columns: set[str] = set()  # set of column names
 
         # Local predicates that apply directly to this table
-        self.equalities: list[EqualityPredicate] = []
-        self.inequalities: list[InequalityPredicate] = []
+        self.equalities: List[EqualityPredicate] = []
+        self.inequalities: List[InequalityPredicate] = []
 
-        self.pk_fk_info: list[tuple[str, str, str]] = []  # type: list[("pk_relation": str, "fk": str, "pk": str)]
+        self.pk_fk_info: List[Tuple[str, str, str]] = []  # type: List[("pk_relation": str, "fk": str, "pk": str)]
 
     def add_join_column(self, col_name: str):
         self.join_columns.add(col_name)
@@ -42,7 +44,7 @@ class Vertex:
             # No existing predicate for col_id, so add it directly
             self.inequalities.append(new_pred)
 
-    def add_pk_fk_info(self, pk_fk_info: tuple[str, str, str]):
+    def add_pk_fk_info(self, pk_fk_info: Tuple[str, str, str]):
         self.pk_fk_info.append(pk_fk_info)
 
     def __repr__(self):

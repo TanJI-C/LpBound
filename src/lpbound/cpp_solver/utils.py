@@ -1,5 +1,7 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 
-def create_variable_mappings(statistics: dict, join_graph: dict) -> list[dict]:
+def create_variable_mappings(statistics: dict, join_graph: dict) -> List[dict]:
     """
     Create variable mappings for the given statistics and join graph.
     """
