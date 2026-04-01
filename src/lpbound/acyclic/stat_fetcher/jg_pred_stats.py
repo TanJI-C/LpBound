@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Dict, List, Tuple, Any, Optional
 from duckdb import DuckDBPyConnection
 
 from lpbound.acyclic.join_graph.join_graph import JoinGraph
@@ -7,12 +9,12 @@ from lpbound.utils.types import DomainSizeStats, Stats
 from lpbound.acyclic.stat_generator.sql_utils import ordered_non_dup_vars
 
 
-def _produce_predicate_norms_conditions(vertex: Vertex, join_graph: JoinGraph) -> list[str]:
+def _produce_predicate_norms_conditions(vertex: Vertex, join_graph: JoinGraph) -> List[str]:
     """
     Generate SQL conditions for predicate norms.
     Returns a list of SQL condition strings.
     """
-    predicate_conditions: list[str] = []
+    predicate_conditions: List[str] = []
 
     # Handle equality predicates
     for predicate in vertex.equalities:
@@ -93,7 +95,7 @@ def _produce_predicate_norms_sql(vertex: Vertex, join_column: str, max_p: int, j
 
 def fetch_predicate_norms(
     con: DuckDBPyConnection, join_graph: JoinGraph, max_p: int
-) -> dict[tuple[str, str], list[float]]:
+) -> Dict[Tuple[str, str], List[float]]:
     """
     Fetch predicate norms for all join columns.
     Returns a dictionary mapping (alias, column) to norm values.
@@ -104,7 +106,10 @@ def fetch_predicate_norms(
             sql = _produce_predicate_norms_sql(v, join_column, max_p, join_graph)
             if sql is not None:
                 norms = execute_fetchone_sql(con, sql)
-                statistics[(v.alias, join_column)] = norms
+                if norms is None:
+                    statistics[(v.alias, join_column)] = tuple(1.0 for _ in range(max_p + 2))
+                else:
+                    statistics[(v.alias, join_column)] = tuple(1.0 if x is None else x for x in norms)
     return statistics
 
 
